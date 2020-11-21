@@ -8,7 +8,6 @@
 #### Exposed data to info dat
 * health
 * offset
-* SN
 
 #### Included TD example file for hot spot detection.
 
