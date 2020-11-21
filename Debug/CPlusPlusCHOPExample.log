@@ -1,0 +1,20 @@
+﻿  TDSlamtec.cpp
+C:\Users\JP\Documents\Shows\Sparks-Tesora\LIDAR\Development\SlamtecLidarTDCPPCHOP-master_tesora\CPlusPlus_Common.h(694,26): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\JP\Documents\Shows\Sparks-Tesora\LIDAR\Development\SlamtecLidarTDCPPCHOP-master_tesora\CPlusPlus_Common.h(695,26): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\JP\Documents\Shows\Sparks-Tesora\LIDAR\Development\SlamtecLidarTDCPPCHOP-master_tesora\CPlusPlus_Common.h(696,26): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\JP\Documents\Shows\Sparks-Tesora\LIDAR\Development\SlamtecLidarTDCPPCHOP-master_tesora\rplidar_sdk\sdk\sdk\include\rplidar_protocol.h(59,16): warning C4200: nonstandard extension used: zero-sized array in struct/union
+C:\Users\JP\Documents\Shows\Sparks-Tesora\LIDAR\Development\SlamtecLidarTDCPPCHOP-master_tesora\rplidar_sdk\sdk\sdk\include\rplidar_protocol.h(59,16): message : This member will be ignored by a defaulted constructor or copy/move assignment operator
+C:\Users\JP\Documents\Shows\Sparks-Tesora\LIDAR\Development\SlamtecLidarTDCPPCHOP-master_tesora\rplidar_sdk\sdk\sdk\include\rplidar_cmd.h(256,20): warning C4200: nonstandard extension used: zero-sized array in struct/union
+C:\Users\JP\Documents\Shows\Sparks-Tesora\LIDAR\Development\SlamtecLidarTDCPPCHOP-master_tesora\rplidar_sdk\sdk\sdk\include\rplidar_cmd.h(256,20): message : This member will be ignored by a defaulted constructor or copy/move assignment operator
+C:\Users\JP\Documents\Shows\Sparks-Tesora\LIDAR\Development\SlamtecLidarTDCPPCHOP-master_tesora\TDSlamtec.cpp(23,1): warning C4005: '_countof': macro redefinition
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\stdlib.h(23): message : see previous definition of '_countof'
+C:\Users\JP\Documents\Shows\Sparks-Tesora\LIDAR\Development\SlamtecLidarTDCPPCHOP-master_tesora\TDSlamtec.cpp(165,27): warning C4333: '>>': right shift by too large amount, data loss
+C:\Users\JP\Documents\Shows\Sparks-Tesora\LIDAR\Development\SlamtecLidarTDCPPCHOP-master_tesora\TDSlamtec.cpp(167,38): warning C4333: '>>': right shift by too large amount, data loss
+C:\Users\JP\Documents\Shows\Sparks-Tesora\LIDAR\Development\SlamtecLidarTDCPPCHOP-master_tesora\TDSlamtec.cpp(276,25): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\JP\Documents\Shows\Sparks-Tesora\LIDAR\Development\SlamtecLidarTDCPPCHOP-master_tesora\TDSlamtec.cpp(310,30): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+C:\Users\JP\Documents\Shows\Sparks-Tesora\LIDAR\Development\SlamtecLidarTDCPPCHOP-master_tesora\TDSlamtec.cpp(362,71): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\JP\Documents\Shows\Sparks-Tesora\LIDAR\Development\SlamtecLidarTDCPPCHOP-master_tesora\TDSlamtec.cpp(371,41): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\JP\Documents\Shows\Sparks-Tesora\LIDAR\Development\SlamtecLidarTDCPPCHOP-master_tesora\TDSlamtec.cpp(272,20): warning C4996: 'rp::standalone::rplidar::RPlidarDriver::getScanDataWithInterval': was declared deprecated
+rplidar_driver.lib(rplidar_driver.obj) : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/INCREMENTAL:NO' specification
+     Creating library C:\Users\JP\Documents\Shows\Sparks-Tesora\LIDAR\Development\SlamtecLidarTDCPPCHOP-master_tesora\Debug\TDSlamtec.lib and object C:\Users\JP\Documents\Shows\Sparks-Tesora\LIDAR\Development\SlamtecLidarTDCPPCHOP-master_tesora\Debug\TDSlamtec.exp
+  CPlusPlusCHOPExample.vcxproj -> C:\Users\JP\Documents\Shows\Sparks-Tesora\LIDAR\Development\SlamtecLidarTDCPPCHOP-master_tesora\Debug\TDSlamtec.dll

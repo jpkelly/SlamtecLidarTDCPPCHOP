@@ -1,0 +1,6 @@
+C:\Users\sator\Documents\Shows\Sparks-Tesora\LIDAR\Development\SlamtecLidarTDCPPCHOP-master jpk\Debug\TDSlamtec.dll
+C:\Users\sator\Documents\Shows\Sparks-Tesora\LIDAR\Development\SlamtecLidarTDCPPCHOP-master jpk\Debug\TDSlamtec.pdb
+C:\Users\sator\Documents\Shows\Sparks-Tesora\LIDAR\Development\SlamtecLidarTDCPPCHOP-master jpk copy\Debug\TDSlamtec.dll
+C:\Users\sator\Documents\Shows\Sparks-Tesora\LIDAR\Development\SlamtecLidarTDCPPCHOP-master jpk copy\Debug\TDSlamtec.pdb
+C:\Users\JP\Documents\Shows\Sparks-Tesora\LIDAR\Development\SlamtecLidarTDCPPCHOP-master_tesora\Debug\TDSlamtec.dll
+C:\Users\JP\Documents\Shows\Sparks-Tesora\LIDAR\Development\SlamtecLidarTDCPPCHOP-master_tesora\Debug\TDSlamtec.pdb
