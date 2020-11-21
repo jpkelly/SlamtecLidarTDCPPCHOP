@@ -96,6 +96,8 @@ private:
 	// In this example this value will be incremented each time the execute()
 	// function is called, then passes back to the CHOP 
 	int32_t				myExecuteCount;
+	uint8_t   			devSerialnum[16];
+    int32_t             myHealth;
 
 	double				myOffset;
 };

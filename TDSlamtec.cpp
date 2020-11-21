@@ -83,6 +83,8 @@ CPlusPlusCHOPExample::CPlusPlusCHOPExample(const OP_NodeInfo *info) : myNodeInfo
     printf("lidar chop::constructor\n");
 
     myExecuteCount = 0;
+    myHealth = 0;
+	memset (devSerialnum, 0x00, 16);
     myOffset = 0.0;
     calibrationFramesRemaining = 0;
     drv = NULL;
@@ -99,6 +101,7 @@ void CPlusPlusCHOPExample::connect(std::string com_path)
 {
     _u32 baudrateArray[2] = {115200, 256000};
     u_result op_result;
+    u_result op_health;
 
     drv = RPlidarDriver::CreateDriver(DRIVER_TYPE_SERIALPORT);
 
@@ -110,7 +113,11 @@ void CPlusPlusCHOPExample::connect(std::string com_path)
     }
 
     rplidar_response_device_info_t devinfo;
+    rplidar_response_device_health_t healthinfo;
+//    u_result op_result;
+//    op_result = drv->getHealth(healthinfo);
     bool connectSuccess = false;
+    
 
     size_t baudRateArraySize = (sizeof(baudrateArray)) / (sizeof(baudrateArray[0]));
     for (size_t i = 0; i < baudRateArraySize; ++i)
@@ -120,6 +127,7 @@ void CPlusPlusCHOPExample::connect(std::string com_path)
         if (IS_OK(drv->connect(com_path.c_str(), baudrateArray[i])))
         {
             op_result = drv->getDeviceInfo(devinfo);
+            op_health = drv->getHealth(healthinfo);
 
             if (IS_OK(op_result))
             {
@@ -145,13 +153,19 @@ void CPlusPlusCHOPExample::connect(std::string com_path)
     for (int pos = 0; pos < 16; ++pos)
     {
         printf("%02X", devinfo.serialnum[pos]);
+		devSerialnum[pos] = devinfo.serialnum[pos];
     }
 
     printf("\n"
            "Firmware Ver: %d.%02d\n"
            "Hardware Rev: %d\n",
            devinfo.firmware_version >> 8, devinfo.firmware_version & 0xFF, (int)devinfo.hardware_version);
-
+    
+    printf("Health: %d\n\n",
+    healthinfo.status >> 8);
+    
+    myHealth = healthinfo.status >> 8;
+    
     //    // check health...
     //    // TODO: Add health check in?
     ////    if (!checkRPLIDARHealth(drv)) {
@@ -225,7 +239,7 @@ void CPlusPlusCHOPExample::execute(CHOP_Output *output,
     u_result op_result;
     size_t count = _countof(nodes);
 
-    // Check to init or uninit depending on state+params combination
+        // Check to init or uninit depending on state+params combination
     bool isActive = inputs->getParInt("Active") == 1;
     bool drvInited = drv != NULL;
 
@@ -270,7 +284,9 @@ void CPlusPlusCHOPExample::execute(CHOP_Output *output,
 
         double tempAngle;
         int halfAngle;
+        bool badData = 0;
 
+        
         for (int pos = 0; pos < (int)retrieved; ++pos)
         {
             float unadjustedAngle = (nodes[pos].angle_q6_checkbit >> RPLIDAR_RESP_MEASUREMENT_ANGLE_SHIFT) / 64.0f;
@@ -297,11 +313,16 @@ void CPlusPlusCHOPExample::execute(CHOP_Output *output,
 
             // Attempt to discard bad data;
             //   should probably be opt-in/out with a toggle
-            if (distance > 5000.0f)
+            int bd = inputs->getParInt("Discardbaddata");
+            int bdr = inputs->getParInt("Baddatarange");
+            if (bd == 1)
             {
-                distances[halfAngle] = 0;
-                //                printf("Skipping bad distance: %f\n", distance);
-                continue;
+                if (distance > bdr)
+                {
+                    distances[halfAngle] = 0;
+                    //                printf("Skipping bad distance: %f\n", distance);
+                    continue;
+                }
             }
 
             distances[halfAngle] = distance;
@@ -366,7 +387,13 @@ void CPlusPlusCHOPExample::execute(CHOP_Output *output,
         }
     }
 
+    myOffset = offsetDegrees;
+
     myExecuteCount++;
+    if (myExecuteCount >= 10000)
+    {
+        myExecuteCount = 1;
+    }
 }
 
 int32_t
@@ -395,11 +422,12 @@ void CPlusPlusCHOPExample::getInfoCHOPChan(int32_t index,
         chan->name->setString("offset");
         chan->value = (float)myOffset;
     }
+	
 }
 
 bool CPlusPlusCHOPExample::getInfoDATSize(OP_InfoDATSize *infoSize, void *reserved1)
 {
-    infoSize->rows = 2;
+    infoSize->rows = 4;
     infoSize->cols = 2;
     // Setting this to false means we'll be assigning values to the table
     // one row at a time. True means we'll do it one column at a time.
@@ -421,7 +449,7 @@ void CPlusPlusCHOPExample::getInfoDATEntries(int32_t index,
 
         // Set the value for the second column
 #ifdef WIN32
-        sprintf_s(tempBuffer, "%d", myExecuteCount);
+        sprintf_s(tempBuffer, sizeof(tempBuffer), "%d", myExecuteCount);
 #else // macOS
         snprintf(tempBuffer, sizeof(tempBuffer), "%d", myExecuteCount);
 #endif
@@ -435,12 +463,39 @@ void CPlusPlusCHOPExample::getInfoDATEntries(int32_t index,
 
         // Set the value for the second column
 #ifdef WIN32
-        sprintf_s(tempBuffer, "%g", myOffset);
+        sprintf_s(tempBuffer, sizeof(tempBuffer), "%g", myOffset);
 #else // macOS
         snprintf(tempBuffer, sizeof(tempBuffer), "%g", myOffset);
 #endif
         entries->values[1]->setString(tempBuffer);
     }
+	
+	if (index == 2)
+	{
+		// Set the value for the first column
+		entries->values[0]->setString("serialNumber");
+
+			// Set the value for the second column
+		#ifdef WIN32
+			for(int j = 0; j < 16; j++)
+				sprintf_s(&tempBuffer[2*j], sizeof(tempBuffer) - (2*j), "%02X", devSerialnum[j]);
+		#else // macOS
+			for(int j = 0; j < 16; j++)
+				snprintf(&tempBuffer[2*j], sizeof(tempBuffer), "%02X", devSerialnum[j]);
+		#endif
+		entries->values[1]->setString(tempBuffer);	}
+    if (index == 3)
+    {
+        // Set the value for the first column
+        entries->values[0]->setString("Health");
+
+            // Set the value for the second column
+        #ifdef WIN32
+            sprintf_s(tempBuffer, sizeof(tempBuffer), "%d", myHealth);
+        #else // macOS
+            snprintf(tempBuffer, sizeof(tempBuffer), "%d", myHealth);
+        #endif
+        entries->values[1]->setString(tempBuffer);    }
 }
 
 void CPlusPlusCHOPExample::setupParameters(OP_ParameterManager *manager, void *reserved1)
@@ -463,26 +518,12 @@ void CPlusPlusCHOPExample::setupParameters(OP_ParameterManager *manager, void *r
 
         cp.name = "Comport";
         cp.label = "COM Port";
-        cp.defaultValue = "/dev/tty.SLAB_USBtoUART";
+        cp.defaultValue = "COM3";
 
         OP_ParAppendResult res = manager->appendString(cp);
 
         assert(res == OP_ParAppendResult::Success);
     }
-
-    //    {
-    //        OP_NumericParameter np;
-    //
-    //        np.name = "Samples";
-    //        np.label = "Samples";
-    //
-    //        np.minSliders[0] = 1;
-    //        np.maxSliders[0] = 720;
-    //        np.defaultValues[0] = 720;
-    //
-    //        OP_ParAppendResult res = manager->appendFloat(np);
-    //        assert(res == OP_ParAppendResult::Success);
-    //    }
 
     {
         OP_StringParameter sp;
@@ -513,26 +554,64 @@ void CPlusPlusCHOPExample::setupParameters(OP_ParameterManager *manager, void *r
         assert(res == OP_ParAppendResult::Success);
     }
 
-    // pulse
     {
         OP_NumericParameter np;
 
-        np.name = "Reset";
-        np.label = "Reset";
+        np.name = "Baddatarange";
+        np.label = "Bad Data Range";
+
+        np.minSliders[0] = 100;
+        np.maxSliders[0] = 6000;
+        np.defaultValues[0] = 5000;
+
+        OP_ParAppendResult res = manager->appendFloat(np);
+        assert(res == OP_ParAppendResult::Success);
+    }
+
+    // discard bad data
+    {
+        OP_NumericParameter badData;
+
+        badData.name = "Discardbaddata";
+        badData.label = "Discard Bad Data";
+        badData.defaultValues[0] = 0;
+
+        OP_ParAppendResult res = manager->appendToggle(badData);
+        assert(res == OP_ParAppendResult::Success);
+    }
+
+//    // pulse
+    {
+        OP_NumericParameter np;
+
+        np.name = "Stopmotor";
+        np.label = "Stop Motor";
 
         OP_ParAppendResult res = manager->appendPulse(np);
+        assert(res == OP_ParAppendResult::Success);
+    }
+
+    // Show SN
+    {
+        OP_StringParameter np;
+
+        np.name = "Serianumber";
+        np.label = "RPLidar S/N";
+        np.defaultValue = "TODO";
+
+        OP_ParAppendResult res = manager->appendString(np);
         assert(res == OP_ParAppendResult::Success);
     }
 }
 
 void CPlusPlusCHOPExample::pulsePressed(const char *name, void *reserved1)
 {
-    if (!strcmp(name, "Reset"))
+    if (!strcmp(name, "Stopmotor"))
     {
-        for (int i = 0; i < sampleCount; ++i)
+        if ( drv != NULL )
         {
-            calibration[i] = 0.0f;
+            drv->stopMotor();
+            printf("MOTOR STOPPED");
         }
-        calibrationFramesRemaining = totalCalbrationFrames;
     }
 }
