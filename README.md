@@ -1,9 +1,9 @@
 ### Forked from https://github.com/thepelkus-too/SlamtecLidarTDCPPCHOP
 
 #### Added pars
-* stop motor
-* toggle bad data
-* bad data range
+* Stop Motor
+* toggle Discard Bad Data
+* Bad Data range
 
 #### Exposed data to info dat
 * health
