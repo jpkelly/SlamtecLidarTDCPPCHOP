@@ -1,14 +1,14 @@
 ### Forked from https://github.com/thepelkus-too/SlamtecLidarTDCPPCHOP
 
-#### Added pars for:
-stop motor
-toggle bad data
-bad data range
+#### Added pars
+* stop motor
+* toggle bad data
+* bad data range
 
-#### Exposed data to info dat:
-health
-offset
-SN
+#### Exposed data to info dat
+* health
+* offset
+* SN
 
 #### Included TD example file for hot spot detection.
 
