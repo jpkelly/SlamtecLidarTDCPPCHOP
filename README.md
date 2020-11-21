@@ -1,3 +1,4 @@
+### Forked from https://github.com/thepelkus-too/SlamtecLidarTDCPPCHOP
 # SlamtecLidarTDCPPCHOP
 A CPP CHOP for TouchDesigner for gathering data from a Slamtec RPLidar scanner
 
