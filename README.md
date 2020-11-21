@@ -2,9 +2,7 @@
 
 #### Added pars for:
 stop motor
-
 toggle bad data
-
 bad data range
 
 #### Exposed data to info dat:
